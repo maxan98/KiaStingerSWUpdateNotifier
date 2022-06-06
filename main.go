@@ -32,8 +32,8 @@ func updater(wg *sync.WaitGroup) {
 	defer wg.Done()
 	debugFirstRun = true
 	prevVersion, _ := getMostRecentUpdate()
-	t := time.NewTicker(30 * time.Second)
-	aliveChecker := time.NewTicker(12 * time.Second)
+	t := time.NewTicker(30 * time.Minute)
+	aliveChecker := time.NewTicker(12 * time.Hour)
 	for {
 		select {
 		case <-t.C:
