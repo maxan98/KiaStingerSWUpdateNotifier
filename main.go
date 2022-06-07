@@ -4,7 +4,6 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	"github.com/gocolly/colly/v2"
 	log "github.com/sirupsen/logrus"
-	"reflect"
 	"strings"
 	"sync"
 	"time"
@@ -30,7 +29,7 @@ func main() {
 
 func updater(wg *sync.WaitGroup) {
 	defer wg.Done()
-	debugFirstRun = true
+	debugFirstRun = false
 	prevVersion, _ := getMostRecentUpdate()
 	t := time.NewTicker(30 * time.Minute)
 	aliveChecker := time.NewTicker(12 * time.Hour)
@@ -42,8 +41,8 @@ func updater(wg *sync.WaitGroup) {
 			if err != nil {
 				log.Error("unable to fetch")
 			}
-			if !reflect.DeepEqual(prevVersion, recentVersion) {
-				log.Infof("Found Updates")
+			if !(prevVersion.Date == recentVersion.Date && prevVersion.Message == recentVersion.Message) {
+				log.Infof("Found Updates %v %v", prevVersion, recentVersion)
 				Robot.SendAlert("New Software released!")
 				prevVersion = recentVersion
 				log.Info("Updated prev version")
